@@ -10,5 +10,24 @@ import scrapy
 
 class LianjiaItem(scrapy.Item):
     # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+    # name = scrapy.Field() 
+    #房子标题 
+    title = scrapy.Field()
+    
+    #房子位置
+    location = scrapy.Field()
+    
+    #房子的大小
+    meters = scrapy.Field()
+    
+    #房子的格局
+    zone = scrapy.Field()
+    
+    #价格
+    price = scrapy.Field()
+    
+    #价格更新日期
+    price_date = scrapy.Field()
+    
+    #房子朝向
+    orientation = scrapy.Field()
