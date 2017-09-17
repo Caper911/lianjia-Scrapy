@@ -4,7 +4,7 @@
 </br>
 </br>
 
-**知识总结**
+**知识总结**<br>
 1.**抓取下来的数据以json格式存储会乱码，需要在settings.py文件加上一行**
 > FEED_EXPORT_ENCODING = 'utf-8' 
 
@@ -23,5 +23,5 @@ area_cut = pd.cut(house_data, area_level, labels=y_labels)
 
 1. 将对应的数据按照area_level给定的区间进行聚类 得到一组用区间范围来表示的数据
 2. 再使用相应的方法来计算，即可得到相应区间范围的数量。
->area_cut.value_counts()
+>area_cut.value_counts()<br>
 **value_counts()返回的是一个Series(pandas中的一个数据类型)，该数据类型包含着一个绘图方法plot()**

@@ -15,6 +15,7 @@ class lianjiaSpider(scrapy.Spider):
     name = "lianjia"
     allowed_domains = ['dg.lianjia.com']
     start_urls = ['https://dg.lianjia.com/zufang/']
+    j = 0
     #lianjia_url = 'https://dg.lianjia.com/zufang/' 
     #page_url = 'pg'
     
@@ -28,18 +29,28 @@ class lianjiaSpider(scrapy.Spider):
         
     def parse(self,response):
         selector = Selector(response)
+        total_info = int(selector.xpath('/html/body/div[4]/div[2]/div[2]/div[1]/h2/span/text()').extract()[0])
         max_page = int(selector.xpath('/html/body/div[4]/div[2]/div[2]/div[1]/h2/span/text()').extract()[0]) // 30 + 1
         for i in range(1,max_page):
             url = self.start_urls[0] + 'pg' + str(i) +'/'
             #print(url)
-            yield Request(url , callback=self.get_infomation)
+            yield Request(url , callback=self.get_infomation , meta={'max_page':max_page,'total_info':total_info})
         
     
     def get_infomation(self,response):
         selector = Selector(response)
         item = LianjiaItem()
         
-        for i in range(0,30):            
+        
+        total_info = response.meta['total_info']
+        max_page = response.meta['max_page']
+        list_num = 30
+        
+        if(self.j == max_page):
+            list_num = (total_info - max_page*list_num) - 1
+        
+        self.j += 1
+        for i in range(1,list_num):            
             item['title'] = selector.xpath('//*[@id="house-lst"]/li[' + str(i) +']/div[2]/h2/a/text()')\
                                 .extract_first().replace(u'\xa0', u' ')  
             item['location'] = selector.xpath('//*[@id="house-lst"]/li['+ str(i) +']/div[2]/div[1]/div[1]/a/span/text()')\
