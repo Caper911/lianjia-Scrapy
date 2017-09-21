@@ -69,7 +69,6 @@ for i in range(0,12):
    
     
 print(dicttt)
-      
 
 #print(house_address)
 
@@ -174,14 +173,37 @@ plt.show()
 #房子出租地区分布分析
 
 #设置生成图片大小
-#fig = plt.figure(figsize=(15,10),dpi=70)
+fig = plt.figure(figsize=(15,10),dpi=70)
 
- 
+arvg = Series(dicttt,index = address_list)
+
+
+
+SurbanArea = Series(urbanArea,index = ['虎门镇','南城区','厚街镇' ,'东城区',
+                                       '长安镇' ,'松山湖','寮步镇','万江区','大朗镇',
+                                       '大岭山镇','道滘镇','沙田镇'] )
+
 #value_counts还是一个顶级的pandas方法。可用于任何是数组或者序列
-urbanArea.value_counts().plot('line',color = "blue", rot=20, alpha=1.0, grid=True, fontsize='10')
+
+y1 = urbanArea.value_counts().plot(kind='bar',
+                           color = "blue",
+                           label ='户数',
+                           rot=20,alpha=1.0, 
+                           grid=True, fontsize='10')
+
+#print(urbanArea.value_counts())
+
+y2 = arvg.plot(kind='line',
+               secondary_y=True,
+               color = "red", 
+               label='出租价钱', 
+               rot=20, alpha=1.0, 
+               grid=True, 
+               fontsize='12',
+                linestyle='--')
 
 plt.title('房子出租地区及出租价钱分布分析')    
  
-plt.legend(['数量']) 
+plt.legend() 
 plt.show()
 
