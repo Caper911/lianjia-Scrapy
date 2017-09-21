@@ -10,10 +10,13 @@ import pandas as pd
 import json
 import requests
 import numpy as np
+import re
+from pandas import Series,DataFrame
 
 fig = plt.figure(figsize=(10,6),dpi=80)
 
-filePath = '/home/caper911/Scrapy/lianjia/lianjia/lianjia.json'
+
+filePath = '/home/caper911/Scrapy/lianjia/lianjia/lianjiaNNew.json'
 
 with open(filePath, 'r') as file:
     lianjia_info = json.load(file)
@@ -22,13 +25,56 @@ with open(filePath, 'r') as file:
 house_data = []
 house_address = []
 house_price = []
+house_urbanArea_set = set()
+house_urbanArea = []
+list_price = [[],[],[],[],[],[],[],[],[],[],[],[]]
 
 for item in lianjia_info:
-    house_data.append( int(item['meters'].replace('平米  ','')))
+    house_data.append(re.sub(u'\(套内\d*\)','',item['meters'].replace('平米','')))
     house_price.append(int(item['price']))
     house_address.append({'address':"{}".format(item['location']),'lat':'','lng':''})
+    house_urbanArea_set.add(item['urbanArea'])
+    house_urbanArea.append(item['urbanArea'])
+    if item['urbanArea'] == '道滘镇':
+        list_price[0].append(int(item['price'])) 
+    elif item['urbanArea'] == '南城区':
+        list_price[1].append(int(item['price']))
+    elif item['urbanArea'] == '虎门镇':
+        list_price[2].append(int(item['price']))
+    elif item['urbanArea'] == '长安镇':
+        list_price[3].append(int(item['price']))    
+    elif item['urbanArea'] == '寮步镇':
+        list_price[4].append(int(item['price']))
+    elif item['urbanArea'] == '沙田镇':
+        list_price[5].append(int(item['price']))
+    elif item['urbanArea'] == '大岭山镇':
+        list_price[6].append(int(item['price']))
+    elif item['urbanArea'] == '松山湖':
+        list_price[7].append(int(item['price']))
+    elif item['urbanArea'] == '大朗镇':
+        list_price[8].append(int(item['price']))
+    elif item['urbanArea'] == '万江区':
+        list_price[9].append(int(item['price']))
+    elif item['urbanArea'] == '厚街镇':
+        list_price[10].append(int(item['price'])) 
+    elif item['urbanArea'] == '东城区':
+        list_price[11].append(int(item['price']))
+
+
+arg_price = []
+dicttt = {}
+address_list = list(house_urbanArea_set)
+for i in range(0,12):
+    dicttt[address_list[i]] = int(np.mean(list_price[i]))
+   
     
+print(dicttt)
+      
+
 #print(house_address)
+
+#print(house_urbanArea_set)
+#print(list_price)
 #####
 #将房子出租位置地址转成相应的纬度坐标
 
@@ -53,7 +99,7 @@ for item in lianjia_info:
 # 
 # =============================================================================
 #print(address +':')
-print( house_address)  
+#print( house_address)  
 
 
 ###############################
@@ -103,4 +149,39 @@ plt.xlabel('货币单位:元')
 plt.legend(['数量']) 
 plt.show()
 
+###############################
+#房子出租地区分布分析
+
+#设置生成图片大小
+fig = plt.figure(figsize=(15,10),dpi=70)
+
+
+urbanArea = Series(house_urbanArea)
+
+#house_urbanArea_set 
+#house_urbanArea_labels = list(house_urbanArea_set)
+
+#value_counts还是一个顶级的pandas方法。可用于任何是数组或者序列
+urbanArea.value_counts().plot(kind='bar',color = "blue", rot=20, alpha=1.0, grid=True, fontsize='12')
+
+
+plt.title('房子出租地区分布分析')    
+ 
+plt.legend(['数量']) 
+plt.show()
+
+###############################
+#房子出租地区分布分析
+
+#设置生成图片大小
+#fig = plt.figure(figsize=(15,10),dpi=70)
+
+ 
+#value_counts还是一个顶级的pandas方法。可用于任何是数组或者序列
+urbanArea.value_counts().plot('line',color = "blue", rot=20, alpha=1.0, grid=True, fontsize='10')
+
+plt.title('房子出租地区及出租价钱分布分析')    
+ 
+plt.legend(['数量']) 
+plt.show()
 

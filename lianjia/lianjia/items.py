@@ -31,3 +31,15 @@ class LianjiaItem(scrapy.Item):
     
     #房子朝向
     orientation = scrapy.Field()
+    
+    #城区名字
+    urbanArea = scrapy.Field()
+     
+    #街道名称        
+    streetName = scrapy.Field()
+    
+    #小区名字
+    housingEstate = scrapy.Field()
+    
+    #高低中楼层
+    floor = scrapy.Field()
